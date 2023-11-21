@@ -7,6 +7,27 @@ local config = function()
 		vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
 	end
 
+	-- enable keybindings only for when lsp server available
+	local on_attach = function (client, bufnr)
+		-- keybindings options
+		local opts = { noremap = true, silent = true, buffer=bufnr }
+
+		-- set keybindings
+		vim.keymap.set("n", "gf", "<cmd>Lspsaga lsp_finder<CR>", opts) -- show definition, references
+		vim.keymap.set("n", "gD", "<cmd>lua vim.lsb.buf.declaration()<CR>", opts) -- go to declaration
+		vim.keymap.set("n", "gd", "<cmd>Lspsaga peek_definition<CR>", opts) -- see definition and make edits
+		vim.keymap.set("n", "gi", "<cmd>lua vim.lsp.buf.implementation()<CR>", opts) -- go to implementation
+		vim.keymap.set("n", "<leader>ca", "<cmd>Lspsaga code_action<CR>", opts) -- see more code actions
+		vim.keymap.set("n", "<leader>rn", "<cmd>Lspsaga rename<CR>", opts) -- smart rename
+		vim.keymap.set("n", "<leader>D", "<cmd>Lspsaga show_line_diagnostics<CR>", opts) -- show diagnotics for
+		vim.keymap.set("n", "<leader>d", "<cmd>Lspsaga diagnostic_jump_prev<CR>", opts) -- jump to prev diagnotics
+		vim.keymap.set("n", "<leader>pd", "<cmd>Lspsaga diagnostic_jump_next<CR>", opts) -- jump to next diagnotics
+		vim.keymap.set("n", "K", "<cmd>Lspsaga hover_doc<CR>", opts) -- show documentation for what is under cursor
+		vim.keymap.set("n", "<leader>lo", "<cmd>LSoutlineToggle<CR>", opts) -- see outline on right side
+
+		-- typescript specific vim.keymaps (e.g. rename file and update imports)
+	end
+
 	--lua
 	lspconfig.lua_ls.setup({
 		-- capabilities = capabilities,
